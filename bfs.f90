@@ -20,14 +20,44 @@
     end do
 
     call addEdge(numberOfVertices, 1, 2, adjecencyList)
-    call addEdge(numberOfVertices, 2, 3, adjecencyList)
+
     call addEdge(numberOfVertices, 3, 4, adjecencyList)
 
     call createBFS(numberOfVertices, bfsRoute, adjecencyList)
 
-    print *, "Deallocating adjecencyList and bfsRoute"
+    call printBFSroute(numberOfVertices, bfsRoute)
 
     end program bfs
+
+
+
+    subroutine printBFSroute(numberOfVertices, bfsRoute)
+
+        integer bfsRoute(numberOfVertices, numberOfVertices)
+
+        integer i,j
+
+        logical printed
+
+        printed = .false.
+
+        do i = 1, numberOfVertices
+            do j = 1, numberOfVertices
+                if( bfsRoute(i,j) .ne. -1 ) then
+                    print *, bfsRoute(i,j)
+                    printed = .true.
+                end if
+            end do
+            if( printed .eqv. .true. ) then
+                print *, "line over"
+            end if
+        end do
+
+    print *, "printBFSroute subroutine is over"
+
+    end subroutine printBFSroute
+
+
 
     subroutine printAdjecencyList(numberOfVertices, adjecencyList)
 
@@ -85,7 +115,7 @@
         visitedVertices(j) = .false.
     end do
 
-    currentBFSroute = 0
+    currentBFSroute = 1
 
     originVertex = 1
 
@@ -107,7 +137,7 @@
         end do
         queuedVertices(j) = originVertex
         
-        do while (  frontQueued .le. numberOfVertices - 1 )
+        do while (  frontQueued .le. numberOfVertices  )
             print *, "Entered allMinusOne loop, frontQueued", frontQueued
             currentVertex =  queuedVertices(frontQueued)
             frontQueued = frontQueued + 1
@@ -136,8 +166,9 @@
             end do
         end do
         print *, "Before adding current route to bfsRoute"
-        jj = 0
-        do while( route(jj) .ne. -1 .and. jj < numberOfVertices)
+        jj = 1
+        do while( route(jj) .ne. -1 .and. jj .le. numberOfVertices)
+            print *, "route(",jj,") -",route(jj)
             bfsRoute(currentBFSroute, jj) = route(jj)
             jj = jj + 1
         end do
