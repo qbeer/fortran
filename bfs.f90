@@ -25,7 +25,7 @@
 
     call createBFS(numberOfVertices, bfsRoute, adjecencyList)
 
-    call printBFSroute(numberOfVertices, bfsRoute)
+!    call printBFSroute(numberOfVertices, bfsRoute)
 
     end program bfs
 
@@ -121,7 +121,7 @@
 
     frontQueued = 1
 
-    do while ( allVisited(numberOfVertices, visitedVertices) .neqv. .true. .and. originVertex .le. numberOfVertices)
+    do while ( allVisited(numberOfVertices, visitedVertices) .neqv. .true. .and. originVertex < numberOfVertices)
         print *, "Entered allVisited loop - numberOfVertices", numberOfVertices
         print *, "Origin vertex - ", originVertex
         visitedVertices(originVertex) = .true.
@@ -139,31 +139,36 @@
         
         do while (  frontQueued .le. numberOfVertices  )
             print *, "Entered allMinusOne loop, frontQueued", frontQueued
+            print *, "Queued vertices : "
+            print *, (queuedVertices(i), i = 1, numberOfVertices)
             currentVertex =  queuedVertices(frontQueued)
+            print *, "currentVertex -",currentVertex
             frontQueued = frontQueued + 1
 !           Push back
-            j = 0
-            do while (route(j) .ne. -1 .and. j < numberOfVertices)
-                j = j + 1
-            end do
-            route(j) = currentVertex
+            if(currentVertex .ne. -1) then
+                j = 0
+                do while (route(j) .ne. -1 .and. j < numberOfVertices)
+                    j = j + 1
+                end do
+                route(j) = currentVertex
 
-            j = 0
-            do j = 1, numberOfVertices
-                if( adjecencyList(currentVertex, j) .ne. -1 ) then
-                    print *, "adjecencyList(currentVertex, j)", adjecencyList(currentVertex, j)
-                    if( visitedVertices( adjecencyList(currentVertex, j) ) .eqv. .false. ) then
-                        visitedVertices( adjecencyList(currentVertex, j) ) = .true.
-!                       Push back
-                        jj = 0
-                        do while (queuedVertices(jj) .ne. -1 .and. jj < numberOfVertices)
-                            jj = jj + 1
-                        end do
-                        queuedVertices(jj) = adjecencyList(currentVertex, j)
-                        print *, "Added new element to queuedVertices - ", adjecencyList(currentVertex, j)
+                j = 0
+                do j = 1, numberOfVertices
+                    if( adjecencyList(currentVertex, j) .ne. -1) then
+                        print *, "adjecencyList(currentVertex, j)", adjecencyList(currentVertex, j)
+                        if( visitedVertices( adjecencyList(currentVertex, j) ) .eqv. .false. ) then
+                            visitedVertices( adjecencyList(currentVertex, j) ) = .true.
+!                           Push back
+                            jj = 0
+                            do while (queuedVertices(jj) .ne. -1 .and. jj < numberOfVertices)
+                                jj = jj + 1
+                            end do
+                            queuedVertices(jj) = adjecencyList(currentVertex, j)
+                            print *, "Added new element to queuedVertices - ", adjecencyList(currentVertex, j)
+                        end if
                     end if
-                end if
-            end do
+                end do
+            end if
         end do
         print *, "Before adding current route to bfsRoute"
         jj = 1
